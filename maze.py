@@ -12,6 +12,7 @@ rows = HEIGHT // w
 grid = []
 stack = []
 
+# data to export 
 maze = {
     'width': WIDTH,
     'height': HEIGHT,
