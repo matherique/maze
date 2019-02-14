@@ -23,4 +23,4 @@ __Setting how many maze data do you need:__
 QTD=10 ./maze.py
 ```
 _*default qtd is 10_
-
+	

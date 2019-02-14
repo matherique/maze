@@ -17,6 +17,11 @@ function setup() {
 			grid.push(new Cell(i, j));
 		}
 	}
+
+
+
+
+
 	maze.data;
 	w = maze.w
 }
