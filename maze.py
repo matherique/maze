@@ -2,16 +2,13 @@
 from random import choice
 import os
 
-# setting config values
-WIDTH = 400
-if 'WIDTH' in os.environ:
-    WIDTH = int(os.environ.get('WIDTH'))
-    
-HEIGHT = 400
-if 'HEIGHT' in os.environ:
-    HEIGHT = int(os.environ.get('HEIGHT'))
+# setting constants
+WIDTH = int(os.environ.get('WIDTH')) if 'WIDTH' in os.environ else 400
+HEIGHT = int(os.environ.get('HEIGHT')) if 'HEIGHT' in os.environ else 400
+QTD = int(os.environ.get('QTD')) if 'QTD' in os.environ else 10
+W = int(os.environ.get('W')) if 'W' in os.environ else 20
 
-w = 20
+TRACK_PATH = bool(os.environ.get('TRACK_PATH')) if 'TRACK_PATH' in os.environ else True
 
 # calculate index from i and j and validate 
 def index (i, j):
@@ -62,7 +59,6 @@ class Cell:
             return False
 
     def __str__(self):
-        #return "i: %d j: %d" % (self.i, self.j)
         return "index: %d" % index(self.i, self.j)
 
     def show(self):
@@ -92,38 +88,39 @@ class Cell:
             a.walls[2] = False
             b.walls[0] = False
 
-qtd = 10
-if 'QTD' in os.environ:
-    qtd = int(os.environ['QTD'])
-
-for x in range(qtd):
+for x in range(QTD):
     current = None
 
-    cols = WIDTH // w
-    rows = HEIGHT // w
+    cols = WIDTH // W
+    rows = HEIGHT // W
 
     grid = []
     stack = []
 
     # data to export 
     maze = {
-        'width': WIDTH,
+        'width': WIDTH, 
         'height': HEIGHT,
-        'w': w,
+        'w': W,
         'cols': cols,
         'rows' : rows,
         'data': [],
-        'current_path': []
     }  
+
     for j in range(rows):
         for i in range(cols):
             grid.append(Cell(i, j))
 
     current = grid[0]
     all_visit = False
+    
+    if TRACK_PATH: 
+        maze['current_path'] = []
 
     while not all_visit:
-        maze['current_path'].append(index(current.i, current.j))
+        if TRACK_PATH:
+            maze['current_path'].append(index(current.i, current.j))
+
         current.visited = True
         # step 1
         nextN = current.checkNeighbors()
@@ -156,5 +153,4 @@ for x in range(qtd):
     
     pos = x + 1
     print("Maze %d finish" % pos)
-
 

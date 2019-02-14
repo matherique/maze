@@ -18,10 +18,6 @@ function setup() {
 		}
 	}
 
-
-
-
-
 	maze.data;
 	w = maze.w
 }
