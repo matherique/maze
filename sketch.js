@@ -1,25 +1,27 @@
-
 let maze = {};
 let grid = [];
 let cols, rows, w, count = 0;
+let start, end;
+
+let filename = 'data/data-400x400-0.json';
+let agent = null;
 
 function preload() {
-	maze = loadJSON('data/data-1000x2000-2.json');
+	maze = loadJSON(filename);
 }
 
 function setup() {
 	createCanvas(maze.width, maze.height);
 	cols = maze.cols;
 	rows = maze.rows;
-	frameRate(5)
+	w = maze.w
+	frameRate(5);
 	for (let j = 0; j < rows; j++) {
 		for (let i = 0; i < cols; i++) {
 			grid.push(new Cell(i, j));
 		}
 	}
-
-	maze.data;
-	w = maze.w
+	agent = new Agent(grid[50]);
 }
 
 function draw() {
@@ -29,6 +31,12 @@ function draw() {
 		grid[i].show();
 		grid[i].getWalls();
 	}
+	// seePath(); 
+	agent.show();
+	agent.setNewPos();
+}
+
+function seePath() {
 	if (maze.current_path) {
 		if (count < maze.current_path.length) {
 			let i = maze.current_path[count];
@@ -36,11 +44,55 @@ function draw() {
 			count++;
 		}
 	}
+
 }
 
 function index(i, j) {
-	return i + j * cols
+	if (i < 0 || j < 0 || i > (cols - 1) || j > (rows - 1))
+		return undefined;
+
+	return i + j * cols;
 }
+
+class Agent {
+	constructor(grid) {
+		this.i = grid.i;
+		this.j = grid.j;
+		this.grid = grid;
+	}
+
+	setNewPos() {
+		let walls = this.grid.walls;
+		let i = random([0, 1, 2, 3]);
+		let stop = false;
+		let choosenone = null;
+		while (!stop) {
+			if (walls[i]) {
+				choosenone = i;
+				stop = true
+			} else {
+				i = random([0, 1, 2, 3]);
+			}
+		}
+		let top = index(this.i, this.j - 1);
+		let right = index(this.i + 1, this.j);
+		let bottom = index(this.i, this.j + 1);
+		let left = index(this.i - 1, this.j);
+		let options = [top, right, bottom, left];
+
+		agent = new Agent(grid[options[i]]);
+
+	}
+
+	show() {
+		let x = this.i * w;
+		let y = this.j * w;
+		fill(0, 0, 255);
+		noStroke();
+		rect(x + 1, y + 1, w - 1, w - 1);
+	}
+}
+
 
 class Cell {
 	constructor(i, j) {
