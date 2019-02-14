@@ -1,27 +1,17 @@
 #!/usr/bin/env python3
 from random import choice
+import os
 
-WIDTH, HEIGHT = (400, 400)
-w = 10
- 
-current = None
+# setting config values
+WIDTH = 400
+if 'WIDTH' in os.environ:
+    WIDTH = int(os.environ.get('WIDTH'))
+    
+HEIGHT = 400
+if 'HEIGHT' in os.environ:
+    HEIGHT = int(os.environ.get('HEIGHT'))
 
-cols = WIDTH // w
-rows = HEIGHT // w
-
-grid = []
-stack = []
-
-# data to export 
-maze = {
-    'width': WIDTH,
-    'height': HEIGHT,
-    'w': w,
-    'cols': cols,
-    'rows' : rows,
-    'data': [],
-    'current_path': []
-}  
+w = 20
 
 # calculate index from i and j and validate 
 def index (i, j):
@@ -102,44 +92,69 @@ class Cell:
             a.walls[2] = False
             b.walls[0] = False
 
-for j in range(rows):
-    for i in range(cols):
-        grid.append(Cell(i, j))
+qtd = 10
+if 'QTD' in os.environ:
+    qtd = int(os.environ['QTD'])
 
-current = grid[0]
-all_visit = False
+for x in range(qtd):
+    current = None
 
-while not all_visit:
-    maze['current_path'].append(index(current.i, current.j))
-    current.visited = True
-    # step 1
-    nextN = current.checkNeighbors()
-    if nextN:        
-        nextN.visited = True
-        stack.append(current)
-        # step 3
-        current.removeWall(nextN)
-        # step 4
-        current = nextN
-    elif len(stack) > 0:
-      current = stack.pop()
-    visit = 0
+    cols = WIDTH // w
+    rows = HEIGHT // w
+
+    grid = []
+    stack = []
+
+    # data to export 
+    maze = {
+        'width': WIDTH,
+        'height': HEIGHT,
+        'w': w,
+        'cols': cols,
+        'rows' : rows,
+        'data': [],
+        'current_path': []
+    }  
+    for j in range(rows):
+        for i in range(cols):
+            grid.append(Cell(i, j))
+
+    current = grid[0]
+    all_visit = False
+
+    while not all_visit:
+        maze['current_path'].append(index(current.i, current.j))
+        current.visited = True
+        # step 1
+        nextN = current.checkNeighbors()
+        if nextN:        
+            nextN.visited = True
+            stack.append(current)
+            # step 3
+            current.removeWall(nextN)
+            # step 4
+            current = nextN
+        elif len(stack) > 0:
+          current = stack.pop()
+        visit = 0
+        for g in grid:
+            if g.visited:
+                visit += 1
+
+        #print("Cells visited %d/%d" % (visit, len(grid)))
+        all_visit = (visit == len(grid))
+           
+
     for g in grid:
-        if g.visited:
-            visit += 1
+        maze['data'].append(g.show())
 
-    print("Cells visited %d/%d" % (visit, len(grid)))
-    all_visit = (visit == len(grid))
-       
+    import json 
 
-for g in grid:
-    maze['data'].append(g.show())
-
-import json 
-
-filename = "data-%dx%d.json" % (WIDTH, HEIGHT)
-with open(filename, 'w') as fp:
-    json.dump(maze, fp)
-
+    filename = "data-%dx%d-%d.json" % (WIDTH, HEIGHT, x)
+    with open('data/' + filename, 'w') as fp:
+        json.dump(maze, fp)
+    
+    pos = x + 1
+    print("Maze %d finish" % pos)
 
 

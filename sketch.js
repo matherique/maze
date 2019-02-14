@@ -4,7 +4,7 @@ let grid = [];
 let cols, rows, w, count = 0;
 
 function preload() {
-	maze = loadJSON('data-400x400.json');
+	maze = loadJSON('data/data-1000x2000-2.json');
 }
 
 function setup() {
