@@ -36,4 +36,4 @@ __Save track path to generate it:__
 # TRACK_PATH=1 => True
 TRACK_PATH=0 ./maze.py
 ```
-_*default qtd is True_
+_*default qtd is TRUE_           
