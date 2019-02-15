@@ -2,12 +2,14 @@ let maze = {};
 let grid = [];
 let cols, rows, w, count = 0;
 let start, end;
+let data;
 
-let filename = 'data/data-400x400-0.json';
-let agent = null;
+let filename = 'data/data-0.json';
+let agent = [];
 
 function preload() {
 	maze = loadJSON(filename);
+
 }
 
 function setup() {
@@ -15,13 +17,18 @@ function setup() {
 	cols = maze.cols;
 	rows = maze.rows;
 	w = maze.w
-	frameRate(5);
+	data = maze.data
+	// frameRate(10);
+
 	for (let j = 0; j < rows; j++) {
 		for (let i = 0; i < cols; i++) {
 			grid.push(new Cell(i, j));
 		}
 	}
-	agent = new Agent(grid[50]);
+	for (let i = 0; i < 10; i++) {
+		let cores = color(random(255), random(255), random(255))
+		agent.push(new Agent(grid[0], cores));
+	}
 }
 
 function draw() {
@@ -31,9 +38,11 @@ function draw() {
 		grid[i].show();
 		grid[i].getWalls();
 	}
-	// seePath(); 
-	agent.show();
-	agent.setNewPos();
+	for (let i = 0; i < agent.length; i++) {
+
+		agent[i].setNewPos(i);
+		agent[i].show();
+	}
 }
 
 function seePath() {
@@ -55,39 +64,65 @@ function index(i, j) {
 }
 
 class Agent {
-	constructor(grid) {
+	constructor(grid, cls = null) {
 		this.i = grid.i;
 		this.j = grid.j;
 		this.grid = grid;
+		this.cls = cls
 	}
 
-	setNewPos() {
+	setNewPos(i) {
 		let walls = this.grid.walls;
-		let i = random([0, 1, 2, 3]);
-		let stop = false;
-		let choosenone = null;
-		while (!stop) {
-			if (walls[i]) {
-				choosenone = i;
-				stop = true
+		let rand = () => random([0, 1, 2, 3]);
+		let convertedwalls = walls.map(w => (w) ? undefined : true);
+		let idx = rand();
+		let x = 0;
+		while (true) {
+			if (convertedwalls[idx]) {
+				break;
 			} else {
-				i = random([0, 1, 2, 3]);
+				idx = rand();
 			}
+			x++;
 		}
-		let top = index(this.i, this.j - 1);
-		let right = index(this.i + 1, this.j);
-		let bottom = index(this.i, this.j + 1);
-		let left = index(this.i - 1, this.j);
-		let options = [top, right, bottom, left];
 
-		agent = new Agent(grid[options[i]]);
+		if (false) {
+			console.log("tentativa", x)
+			console.log("res:", convertedwalls[idx]);
+			console.log("index", idx);
+			console.log("grid: ", this.grid);
+			console.log("===============================");
+		}
+
+		let gridpos = null
+		if (idx == 0)
+			gridpos = index(this.i, this.j - 1);
+		if (idx == 1)
+			gridpos = index(this.i + 1, this.j);
+		if (idx == 2)
+			gridpos = index(this.i, this.j + 1);
+		if (idx == 3)
+			gridpos = index(this.i - 1, this.j);
+
+
+
+
+		if (gridpos !== null)
+			agent[i] = new Agent(grid[gridpos], this.cls);
+
+
+		if (gridpos == grid.length - 1) {
+			agent[i] = new Agent(grid[gridpos], this.cls);
+			console.log(this)
+			noLoop();
+		}
 
 	}
 
 	show() {
 		let x = this.i * w;
 		let y = this.j * w;
-		fill(0, 0, 255);
+		fill(this.cls);
 		noStroke();
 		rect(x + 1, y + 1, w - 1, w - 1);
 	}
@@ -103,10 +138,10 @@ class Cell {
 
 	getWalls() {
 		let idx = index(this.i, this.j);
-		this.walls[0] = !!maze.data[idx].top
-		this.walls[1] = !!maze.data[idx].right
-		this.walls[2] = !!maze.data[idx].bottom
-		this.walls[3] = !!maze.data[idx].left
+		this.walls[0] = !!data[idx].top
+		this.walls[1] = !!data[idx].right
+		this.walls[2] = !!data[idx].bottom
+		this.walls[3] = !!data[idx].left
 	}
 
 	show() {

@@ -41,16 +41,16 @@ class Cell:
         bottom  = checkinlist(index(self.i, self.j + 1))
         left    = checkinlist(index(self.i - 1, self.j))
 
-        if (top and not top.visited):
+        if top and not top.visited:
             neigh.append(top)
 
-        if (right and not right.visited):
+        if right and not right.visited:
             neigh.append(right)
 
-        if (bottom and not bottom.visited):
+        if bottom and not bottom.visited:
             neigh.append(bottom)
 
-        if (left and not left.visited):
+        if left and not left.visited:
             neigh.append(left)
 
         if len(neigh) > 0:
@@ -147,7 +147,8 @@ for x in range(QTD):
 
     import json 
 
-    filename = "data-%dx%d-%d.json" % (WIDTH, HEIGHT, x)
+    # filename = "data-%dx%d-%d.json" % (WIDTH, HEIGHT, x)
+    filename = "data-%d.json" % x
     with open('data/' + filename, 'w') as fp:
         json.dump(maze, fp)
     
