@@ -9,7 +9,6 @@ let agent = [];
 
 function preload() {
 	maze = loadJSON(filename);
-
 }
 
 function setup() {
