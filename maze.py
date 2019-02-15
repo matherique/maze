@@ -138,7 +138,7 @@ for x in range(QTD):
             if g.visited:
                 visit += 1
 
-        #print("Cells visited %d/%d" % (visit, len(grid)))
+        print("Cells visited %d/%d" % (visit, len(grid)))
         all_visit = (visit == len(grid))
            
 

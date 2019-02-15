@@ -39,10 +39,11 @@ function draw() {
 		grid[i].getWalls();
 	}
 	for (let i = 0; i < agent.length; i++) {
-
 		agent[i].setNewPos(i);
 		agent[i].show();
 	}
+
+	seePath();
 }
 
 function seePath() {
@@ -103,8 +104,6 @@ class Agent {
 			gridpos = index(this.i, this.j + 1);
 		if (idx == 3)
 			gridpos = index(this.i - 1, this.j);
-
-
 
 
 		if (gridpos !== null)
@@ -170,7 +169,7 @@ class Cell {
 	showCurrent() {
 		let x = this.i * maze.w;
 		let y = this.j * maze.w;
-		fill(255, 0, 0);
+		fill(255, 255, 255);
 		noStroke();
 		rect(x, y, maze.w, maze.w);
 	}
