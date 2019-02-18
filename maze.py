@@ -85,7 +85,6 @@ class Cell:
 
 for x in range(QTD):
     current = None
-
     cols = WIDTH // W
     rows = HEIGHT // W
 
@@ -101,10 +100,8 @@ for x in range(QTD):
         'rows' : rows,
         'data': [],
     }  
-
-    for j in range(rows):
-        for i in range(cols):
-            grid.append(Cell(i, j))
+    
+    grid = [Cell(i, j) for i in range(rows) for j in range(cols)]
 
     current = grid[0]
     all_visit = False
