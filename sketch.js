@@ -3,7 +3,7 @@ let grid = [];
 let cols, rows, w, count = 0;
 let start, end;
 let data;
-
+let drawed = false;
 let filename = 'data/data-0.json';
 let agent = [];
 
@@ -17,30 +17,30 @@ function setup() {
 	rows = maze.rows;
 	w = maze.w
 	data = maze.data
-	// frameRate(10);
+	frameRate(10);
 
 	for (let j = 0; j < rows; j++) {
 		for (let i = 0; i < cols; i++) {
 			grid.push(new Cell(i, j));
 		}
 	}
-	for (let i = 0; i < 10; i++) {
-		let cores = color(random(255), random(255), random(255))
-		agent.push(new Agent(grid[0], cores));
-	}
+	// for (let i = 0; i < 10; i++) {
+	// 	let cores = color(random(255), random(255), random(255))
+	// 	agent.push(new Agent(grid[0], cores));
+	// }
 }
 
 function draw() {
 	background(50);
-
 	for (let i = 0; i < grid.length; i++) {
 		grid[i].show();
 		grid[i].getWalls();
 	}
-	for (let i = 0; i < agent.length; i++) {
-		agent[i].setNewPos(i);
-		agent[i].show();
-	}
+
+	// for (let i = 0; i < agent.length; i++) {
+	// 	agent[i].setNewPos(i);
+	// 	agent[i].show();
+	// }
 
 	seePath();
 }
@@ -111,7 +111,6 @@ class Agent {
 
 		if (gridpos == grid.length - 1) {
 			agent[i] = new Agent(grid[gridpos], this.cls);
-			console.log(this)
 			noLoop();
 		}
 
@@ -132,6 +131,7 @@ class Cell {
 		this.i = i;
 		this.j = j;
 		this.walls = [true, true, true, true];
+		this.node = false;
 	}
 
 	getWalls() {
@@ -140,10 +140,11 @@ class Cell {
 		this.walls[1] = !!data[idx].right
 		this.walls[2] = !!data[idx].bottom
 		this.walls[3] = !!data[idx].left
+		this.node = !!data[idx].node;
 	}
 
 	show() {
-		let x = this.i * maze.w;
+		let x = (this.i) * maze.w;
 		let y = this.j * maze.w;
 
 		stroke(255);
@@ -162,6 +163,10 @@ class Cell {
 
 		if (this.walls[3]) {
 			line(x, y + w, x, y)
+		}
+
+		if (this.node) {
+			ellipse(x + w / 2, y + w / 2, 10, 10);
 		}
 	}
 

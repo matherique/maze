@@ -3,3 +3,4 @@ command.txt
 data/
 .trash/
 server.sh
+__pycache__/
