@@ -17,12 +17,3 @@ for x in range(QTD):
     filename = "data-%d.json" % x
     with open('data/' + filename, 'w') as fp:
         json.dump(data, fp)
-
-
-
-
-
-
-
-
-
